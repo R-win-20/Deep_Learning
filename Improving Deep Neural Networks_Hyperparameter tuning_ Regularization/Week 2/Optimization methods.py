@@ -748,8 +748,8 @@ def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate = 0.01
 
         # Compute bias-corrected first moment estimate. Inputs: "v, beta1, t". Output: "v_corrected".
         ### START CODE HERE ### (approx. 2 lines)
-        v_corrected["dW" + str(l+1)] = v["dW" + str(l+1)] / (1 - beta1)
-        v_corrected["db" + str(l+1)] = v["db" + str(l+1)] / (1 - beta1)
+        v_corrected["dW" + str(l + 1)] = v["dW" + str(l + 1)] / (1 - np.power(beta1, t))
+        v_corrected["db" + str(l + 1)] = v["db" + str(l + 1)] / (1 - np.power(beta1, t))
         ### END CODE HERE ###
 
         # Moving average of the squared gradients. Inputs: "s, grads, beta2". Output: "s".
@@ -760,8 +760,8 @@ def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate = 0.01
 
         # Compute bias-corrected second raw moment estimate. Inputs: "s, beta2, t". Output: "s_corrected".
         ### START CODE HERE ### (approx. 2 lines)
-        s_corrected["dW" + str(l+1)] = s["dW" + str(l+1)] / (1 - beta2)
-        s_corrected["db" + str(l+1)] = s["db" + str(l+1)] / (1 - beta2)
+        s_corrected["dW" + str(l + 1)] = s["dW" + str(l + 1)] / (1 - np.power(beta2, t))
+        s_corrected["db" + str(l + 1)] = s["db" + str(l + 1)] / (1 - np.power(beta2, t))
         ### END CODE HERE ###
 
         # Update parameters. Inputs: "parameters, learning_rate, v_corrected, s_corrected, epsilon". Output: "parameters".
@@ -1103,3 +1103,47 @@ plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 # **References**:
 # 
 # - Adam paper: https://arxiv.org/pdf/1412.6980.pdf
+
+# GRADED FUNCTION: update_lr
+
+def update_lr(learning_rate0, epoch_num, decay_rate):
+    """
+    Calculates updated the learning rate using exponential weight decay.
+    
+    Arguments:
+    learning_rate0 -- Original learning rate. Scalar
+    epoch_num -- Epoch number. Integer
+    decay_rate -- Decay rate. Scalar
+
+    Returns:
+    learning_rate -- Updated learning rate. Scalar 
+    """
+    #(approx. 1 line)
+    # learning_rate = 
+    # YOUR CODE STARTS HERE
+    learning_rate = (1 / (1 + decay_rate * epoch_num)) * learning_rate0
+    # YOUR CODE ENDS HERE
+    return learning_rate
+
+# GRADED FUNCTION: schedule_lr_decay
+
+def schedule_lr_decay(learning_rate0, epoch_num, decay_rate, time_interval=1000):
+    """
+    Calculates updated the learning rate using exponential weight decay.
+    
+    Arguments:
+    learning_rate0 -- Original learning rate. Scalar
+    epoch_num -- Epoch number. Integer.
+    decay_rate -- Decay rate. Scalar.
+    time_interval -- Number of epochs where you update the learning rate.
+
+    Returns:
+    learning_rate -- Updated learning rate. Scalar 
+    """
+    # (approx. 1 lines)
+    # learning_rate = ...
+    # YOUR CODE STARTS HERE
+    vb = epoch_num // time_interval
+    learning_rate = (1 / (1 + decay_rate * vb)) * learning_rate0
+    # YOUR CODE ENDS HERE
+    return learning_rate
